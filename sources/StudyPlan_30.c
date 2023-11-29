@@ -4,6 +4,12 @@
 #define MAX_DAYS 30
 #define MAX_CONCEPTS 10
 
+// 개념 구조체 정의
+typedef struct {
+    char word[50];
+    char definition[100];
+} Concept;
+
 // 메뉴 출력 함수
 void printMenu() {
     printf("\n[메뉴]\n");
@@ -14,16 +20,32 @@ void printMenu() {
     printf("메뉴를 선택하세요: ");
 }
 
+// 부족한 개념 입력 함수
+void enterConcepts(Concept concepts[MAX_SUBJECTS][MAX_CONCEPTS], int subjectIndex) {
+    printf("%s 과목의 부족했던 개념을 입력해주세요 (입력을 마치려면 q를 입력하세요):\n", concepts[subjectIndex][0].word);
+
+    for (int j = 0; j < MAX_CONCEPTS; ++j) {
+        printf("단어: ");
+        if (scanf_s("%s", concepts[subjectIndex][j].word, sizeof(concepts[subjectIndex][j].word)) != 1 || concepts[subjectIndex][j].word[0] == 'q') {
+            // 'q'를 입력하면 입력 종료
+            break;
+        }
+
+        printf("정의: ");
+        scanf_s("%s", concepts[subjectIndex][j].definition, sizeof(concepts[subjectIndex][j].definition));
+    }
+}
+
 int main() {
     int subjectCount, totalDays;
-
-    // 과목 수 입력
-    printf("시험을 보는 과목의 개수를 입력하세요: ");
-    scanf_s("%d", &subjectCount);
 
     // 과목명과 시험 날짜를 저장하는 배열
     char subjects[MAX_SUBJECTS][50];
     char examDates[MAX_SUBJECTS][20];
+
+    // 과목 수 입력
+    printf("시험을 보는 과목의 개수를 입력하세요: ");
+    scanf_s("%d", &subjectCount);
 
     // 각 과목의 이름과 시험 날짜 입력
     for (int i = 0; i < subjectCount; ++i) {
@@ -35,24 +57,7 @@ int main() {
     }
 
     // 부족한 개념을 저장하는 배열
-    char concepts[MAX_SUBJECTS][MAX_CONCEPTS][50];
-    char definitions[MAX_SUBJECTS][MAX_CONCEPTS][100];
-
-    // 부족한 개념 입력
-    for (int i = 0; i < subjectCount; ++i) {
-        printf("%s 과목의 부족했던 개념을 입력해주세요 (입력을 마치려면 q를 입력하세요):\n", subjects[i]);
-
-        for (int j = 0; j < MAX_CONCEPTS; ++j) {
-            printf("단어: ");
-            if (scanf_s("%s", concepts[i][j], sizeof(concepts[i][j])) != 1 || concepts[i][j][0] == 'q') {
-                // 'q'를 입력하면 입력 종료
-                break;
-            }
-
-            printf("정의: ");
-            scanf_s("%s", definitions[i][j], sizeof(definitions[i][j]));
-        }
-    }
+    Concept concepts[MAX_SUBJECTS][MAX_CONCEPTS];
 
     // 메뉴 선택 및 처리
     int menuChoice;
@@ -70,7 +75,7 @@ int main() {
             for (int day = 1; day <= MAX_DAYS && day <= totalDays; ++day) {
                 int subjectIndex = ((day - 1) / 3) % subjectCount;
 
-                printf("Day %d: %s ", day, subjects[subjectIndex]);
+                printf("Day %d: %s (시험 날짜: %s) ", day, subjects[subjectIndex], examDates[subjectIndex]);
 
                 switch ((day - 1) % 3) {
                 case 0:
@@ -88,10 +93,10 @@ int main() {
                 printf("부족한 개념: ");
                 for (int i = 0; i < MAX_CONCEPTS; ++i) {
                     // 'q' 입력이면 출력 중단
-                    if (concepts[subjectIndex][i][0] == 'q') {
+                    if (concepts[subjectIndex][i].word[0] == 'q') {
                         break;
                     }
-                    printf("%s - %s ", concepts[subjectIndex][i], definitions[subjectIndex][i]);
+                    printf("%s - %s ", concepts[subjectIndex][i].word, concepts[subjectIndex][i].definition);
                 }
 
                 if ((day % (3 * subjectCount)) == 0 && day != totalDays) {
@@ -101,7 +106,17 @@ int main() {
             break;
         case 2:
             // 부족 개념 입력
-            // TODO: 구현 필요
+            // 사용자가 어떤 과목에 대한 부족한 개념을 입력할 지 선택
+            printf("어떤 과목에 대한 부족한 개념을 입력하시겠습니까? (과목 번호 입력): ");
+            int selectedSubject;
+            scanf_s("%d", &selectedSubject);
+
+            if (selectedSubject >= 1 && selectedSubject <= subjectCount) {
+                enterConcepts(concepts, selectedSubject - 1);
+            }
+            else {
+                printf("올바른 과목 번호를 입력하세요.\n");
+            }
             break;
         case 3:
             // 수행 여부 입력하기
@@ -119,4 +134,3 @@ int main() {
 
     return 0;
 }
-
