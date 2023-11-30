@@ -97,18 +97,18 @@ int main() {
         switch (menuChoice) {
         case 1:
             // 30일용 계획 세우기
-            totalDays = subjectCount * 3 * subjectCount;
+            totalDays = MAX_DAYS;
             printf("\n[스터디 계획]\n");
 
             // 로테이션 계획 및 부족한 개념 출력
-            for (int day = 1; day <= MAX_DAYS && day <= totalDays; ++day) {
-                int subjectIndex = ((day - 1) / 3) % subjectCount;
+            for (int day = 1; day <= totalDays; ++day) {
+                int subjectIndex = (day - 1) / 3 % subjectCount;
 
                 printf("Day %d: %s ", day, subjects[subjectIndex].name);
 
                 switch ((day - 1) % 3) {
                 case 0:
-                    printf("%d회독\n", ((day - 1) / (3 * subjectCount)) + 1);
+                    printf("%d회독\n", ((day - 1) / 3) + 1);
                     break;
                 case 1:
                     printf("문제풀이&오답 체크\n");
@@ -118,7 +118,7 @@ int main() {
                     break;
                 }
 
-                if ((day % (3 * subjectCount)) == 0 && day != totalDays) {
+                if (day % 3 == 0) {
                     printf("\n");
                 }
             }
@@ -148,8 +148,8 @@ int main() {
             if (choice == 'X' || choice == 'x') {
                 // Day 30의 전체 계획을 하루씩 뒤로 밀기
                 for (int i = MAX_DAYS - 1; i > 0; --i) {
-                    subjects[((i - 1) / 3) % subjectCount].concepts[i % MAX_CONCEPTS][0] =
-                        subjects[((i - 1) / 3) % subjectCount].concepts[(i - 1) % MAX_CONCEPTS][0];
+                    subjects[(i - 1) / 3 % subjectCount].concepts[i % MAX_CONCEPTS][0] =
+                        subjects[(i - 1) / 3 % subjectCount].concepts[(i - 1) % MAX_CONCEPTS][0];
                 }
                 printf("Day 30의 계획이 하루씩 뒤로 밀렸습니다.\n");
             }
