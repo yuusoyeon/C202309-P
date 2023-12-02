@@ -19,8 +19,9 @@ void printMenu() {
     printf("1. 30일용 계획 세우기\n");
     printf("2. 부족 개념 입력\n");
     printf("3. 부족한 개념 확인하기\n");
-    printf("4. 수행 여부 입력하기\n");
-    printf("5. 종료\n");
+    printf("4. 오늘 일정을 미루시겠습니까? (Y/N)\n");
+    printf("5. 오늘의 D-day 계획 확인하기\n");
+    printf("6. 종료\n");
     printf("메뉴를 선택하세요: ");
 }
 
@@ -61,6 +62,33 @@ void freeMemory(struct Subject* subjects, int subjectCount) {
     }
 }
 
+// 오늘의 D-day 계획 출력 함수
+void printDdayPlan(struct Subject* subjects, int subjectCount, int dDay) {
+    printf("\n[Day %d의 계획]\n", dDay);
+
+    for (int day = 1; day <= dDay; ++day) {
+        int subjectIndex = (day - 1) / 3 % subjectCount;
+
+        printf("    %s ", subjects[subjectIndex].name);
+
+        switch ((day - 1) % 3) {
+        case 0:
+            printf("%d회독\n", ((day - 1) / 3) + 1);
+            break;
+        case 1:
+            printf("문제풀이&오답 체크\n");
+            break;
+        case 2:
+            printf("백지 테스트\n");
+            break;
+        }
+
+        if (day % 3 == 0) {
+            printf("\n");
+        }
+    }
+}
+
 int main() {
     int subjectCount, totalDays;
 
@@ -90,6 +118,7 @@ int main() {
 
     // 메뉴 선택 및 처리
     int menuChoice;
+    int dDay = 0;  // D-day 변수 초기화
     do {
         printMenu();
         scanf_s("%d", &menuChoice);
@@ -140,21 +169,28 @@ int main() {
             }
             break;
         case 4:
-            // 수행 여부 입력하기
-            printf("오늘의 일정을 수행하셨나요? (수행했다면 'Y', 밀기 원하면 'X'): ");
+            // 오늘 일정을 미루시겠습니까?
+            printf("오늘 일정을 미루시겠습니까? (Y/N): ");
             char choice;
             scanf_s(" %c", &choice, 1);
 
-            if (choice == 'X' || choice == 'x') {
+            if (choice == 'Y' || choice == 'y') {
                 // Day 30의 전체 계획을 하루씩 뒤로 밀기
                 for (int i = MAX_DAYS - 1; i > 0; --i) {
                     subjects[(i - 1) / 3 % subjectCount].concepts[i % MAX_CONCEPTS][0] =
                         subjects[(i - 1) / 3 % subjectCount].concepts[(i - 1) % MAX_CONCEPTS][0];
                 }
                 printf("Day 30의 계획이 하루씩 뒤로 밀렸습니다.\n");
+
             }
             break;
         case 5:
+            // 오늘의 D-day 계획 확인하기
+            printf("오늘의 D-day를 입력하세요: ");
+            scanf_s("%d", &dDay);
+            printDdayPlan(subjects, subjectCount, dDay);
+            break;
+        case 6:
             // 종료
             printf("프로그램을 종료합니다.\n");
             break;
@@ -162,7 +198,7 @@ int main() {
             printf("잘못된 메뉴 선택입니다. 다시 선택하세요.\n");
         }
 
-    } while (menuChoice != 5);
+    } while (menuChoice != 6);
 
     // 메모리 해제
     freeMemory(subjects, subjectCount);
