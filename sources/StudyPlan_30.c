@@ -48,27 +48,28 @@ void freeMemory(struct Subject* subjects, int subjectCount) {
 }
 
 void printDdayPlan(struct Subject* subjects, int subjectCount, int dDay) {
+    if (dDay < 1 || dDay > MAX_DAYS) {
+        printf("D-day 값이 아닙니다.\n");
+        return;
+    }
+
     printf("\n[Day %d의 계획]\n", dDay);
 
-    for (int day = 1; day <= dDay; ++day) {
-        int subjectIndex = (day - 1) / 3 % subjectCount;
+    int subjectIndex = (dDay - 1) / 3 % subjectCount;
 
-        printf("    %s ", subjects[subjectIndex].name);
+    printf("    %s ", subjects[subjectIndex].name);
 
-        switch ((day - 1) % 3) {
-        case 0:
-            printf("%d회독\n", ((day - 1) / 3) + 1);
-            break;
-        case 1:
-            printf("문제풀이&오답 체크\n");
-            break;
-        case 2:
-            printf("백지 테스트\n");
-            break;
-        }
-
-        if (day % 3 == 0) {
-            printf("\n");
-        }
+    switch ((dDay - 1) % 3) {
+    case 0:
+        printf("%d회독\n", ((dDay - 1) / 3) + 1);
+        break;
+    case 1:
+        printf("문제풀이&오답 체크\n");
+        break;
+    case 2:
+        printf("백지 테스트\n");
+        break;
     }
+
+    printf("\n");
 }
