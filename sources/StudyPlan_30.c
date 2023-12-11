@@ -1,6 +1,38 @@
 #include "Studyplan_30.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <stddef.h>
+
+
+#define MAX_SUBJECTS 10
+#define MAX_DAYS 30
+#define MAX_CONCEPTS 10
+
+void getMonthDay(const char* date, int* month, int* day) {
+    sscanf_s(date, "%d월%d일", month, day);
+}
+
+int calcDaysLeft(const char* currentDate, const char* examDate) {
+    struct tm currentTime, examTime;
+    memset(&currentTime, 0, sizeof(struct tm));
+    memset(&examTime, 0, sizeof(struct tm));
+
+    sscanf_s(currentDate, "%d월%d일", &currentTime.tm_mon, &currentTime.tm_mday);
+    currentTime.tm_mon -= 1;
+    currentTime.tm_year = 2023 - 1900;
+
+    sscanf_s(examDate, "%d월%d일", &examTime.tm_mon, &examTime.tm_mday);
+    examTime.tm_mon -= 1;
+    examTime.tm_year = 2023 - 1900;
+
+    time_t currentTimestamp = mktime(&currentTime);
+    time_t examTimestamp = mktime(&examTime);
+
+    int daysLeft = (examTimestamp - currentTimestamp) / (60 * 60 * 24);
+    return daysLeft;
+}
 
 void printMenu() {
     printf("\n[메뉴]\n");
@@ -20,7 +52,6 @@ void inputConcepts(struct Subject* subjects, int subjectCount) {
         for (int j = 0; j < MAX_CONCEPTS; ++j) {
             printf("단어: ");
             if (scanf_s("%s", subjects[i].concepts[j], 50) != 1 || subjects[i].concepts[j][0] == 'q') {
-                // 'q'를 입력하면 입력 종료
                 break;
             }
 
@@ -47,29 +78,24 @@ void freeMemory(struct Subject* subjects, int subjectCount) {
     }
 }
 
-void printDdayPlan(struct Subject* subjects, int subjectCount, int dDay) {
-    if (dDay < 1 || dDay > MAX_DAYS) {
+void printDdayPlan(struct Subject* subjects, int subjectCount, const char* currentDate, const char* examStartDate) {
+    int daysElapsed = calcDaysLeft(currentDate, examStartDate);
+
+    int userDday;
+    printf("오늘의 D-day를 입력하세요: ");
+    scanf_s("%d", &userDday);
+
+    // 유효한 D-day 값인지 확인
+    if (userDday < 1 || userDday > MAX_DAYS) {
         printf("D-day 값이 아닙니다.\n");
         return;
     }
 
-    printf("\n[Day %d의 계획]\n", dDay);
+    printf("\n[Day %d의 계획]\n", userDday);
 
-    int subjectIndex = (dDay - 1) / 3 % subjectCount;
-
-    printf("    %s ", subjects[subjectIndex].name);
-
-    switch ((dDay - 1) % 3) {
-    case 0:
-        printf("%d회독\n", ((dDay - 1) / 3) + 1);
-        break;
-    case 1:
-        printf("문제풀이&오답 체크\n");
-        break;
-    case 2:
-        printf("백지 테스트\n");
-        break;
+    for (int i = 0; i < subjectCount; ++i) {
+        int remainingDays = userDday - daysElapsed;
+        printf("%s - %d일 남았습니다.\n", subjects[i].name, remainingDays);
     }
-
-    printf("\n");
 }
+
