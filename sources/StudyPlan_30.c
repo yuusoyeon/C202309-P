@@ -68,6 +68,91 @@ void freeMemory(struct Subject* subjects, int subjectCount) {
     }
 }
 
+
+int quizConcepts(struct Subject* subjects, int subjectIndex) {
+    int additionalQuizzes;
+    int allCorrect = 1;  // 모든 정답을 맞췄는지 여부를 나타내는 변수
+
+    do {
+        printf("%s 과목의 부족했던 개념을 퀴즈로 확인합니다:\n", subjects[subjectIndex].name);
+
+        for (int i = 0; i < MAX_CONCEPTS; ++i) {
+            if (subjects[subjectIndex].concepts[i][0] == 'q') {
+                break;
+            }
+
+            // 사용자에게 단어를 물어보고 정답 체크
+            printf("단어: %s\n", subjects[subjectIndex].concepts[i]);
+            printf("정의: ");
+            char userDefinition[100];
+            scanf_s("%s", userDefinition, sizeof(userDefinition));
+
+            if (strcmp(userDefinition, subjects[subjectIndex].definitions[i]) == 0) {
+                printf("정답입니다!\n");
+            }
+            else {
+                printf("틀렸습니다. 정답은: %s\n", subjects[subjectIndex].definitions[i]);
+                allCorrect = 0;  // 하나라도 틀리면 allCorrect를 0으로 설정
+            }
+        }
+
+        // 추가 퀴즈 여부 물어보기
+        printf("추가 퀴즈를 풀 것인가요? (1: 예, 0: 아니오): ");
+        scanf_s("%d", &additionalQuizzes);
+
+    } while (additionalQuizzes == 1);
+
+    return allCorrect;
+}
+
+
+// 비밀 일기장 열기 함수
+void openDiary() {
+    char password[20];
+    char line[MAX];
+    char contents[MAX];
+
+    printf("비밀 일기에 오신 것을 환영합니다.\n");
+    printf("비밀번호를 입력하세요 (최대 20자리): ");
+    scanf_s("%s", password, sizeof(password));
+
+    printf("\n\n=== 비밀번호 확인 중===\n\n");
+
+    if (strcmp(password, "abcd") != 0) {
+        printf("=== 비밀번호가 틀렸어요. ===\n\n");
+        return;
+    }
+
+    printf("=== 비밀번호 확인 완료.===\n\n");
+    char* fileName = "./diary.txt";
+    FILE* file;
+    fopen_s(&file, fileName, "a+");
+    if (file == NULL) {
+        printf("파일 열기 실패\n");
+
+        return;
+    }
+
+    while (fgets(line, MAX, file) != NULL) {
+        printf("%s", line);
+    }
+
+    printf("\n\n내용을 계속 작성하세요! 종료하려면 EXIT를 입력하세요.\n\n");
+
+    while (1) {
+        scanf_s("%[^\n]", contents, sizeof(contents));
+        getchar();
+
+        if (strcmp(contents, "EXIT") == 0) {
+            printf("비밀일기 입력을 종료합니다.\n\n");
+            break;
+        }
+        fputs(contents, file);
+        fputs("\n", file);
+    }
+    fclose(file);
+}
+
 void printDdayPlan(struct Subject* subjects, int subjectCount, const char* currentDate, const char* examStartDate) {
     int daysElapsed = calcDaysLeft(currentDate, examStartDate);
 

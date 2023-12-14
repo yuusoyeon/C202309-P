@@ -7,10 +7,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdbool.h>
 
 #define MAX_SUBJECTS 10
 #define MAX_DAYS 30
 #define MAX_CONCEPTS 10
+#define MAX 1000
 
 // 구조체 정의: 과목 정보
 struct Subject {
@@ -40,5 +42,7 @@ void freeMemory(struct Subject* subjects, int subjectCount);
 
 // 오늘의 D-day 계획 출력 함수
 void printDdayPlan(struct Subject* subjects, int subjectCount, const char* currentDate, const char* examStartDate);
+
+int quizConcepts(struct Subject* subject);
 
 #endif // STUDYPLAN_30_H

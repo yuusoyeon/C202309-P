@@ -73,12 +73,12 @@ int main() {
          
         case 2:
             // 오늘의 D-day 계획 확인하기
-            printf("오늘의 날짜를 입력하세요 (월일 형식, ex: 12월11일): \n");
+            printf("오늘의 날짜를 입력하세요 (월일 형식, ex: 12월11일): ");
             scanf_s("%s", currentDate, 20);
 
             int daysElapsed = calcDaysLeft(currentDate, examStartDate);
 
-            printf("[D-day 남은 일수]\n");
+            printf("\n[D-day 남은 일수]\n");
 
             for (int i = 0; i < subjectCount; ++i) {
                 int daysLeft = calcDaysLeft(examStartDate, subjects[i].examDate);
@@ -111,17 +111,29 @@ int main() {
             // 부족 개념 입력
             inputConcepts(subjects, subjectCount);
             break;
+ 
         case 4:
-            // 부족한 개념 확인하기
+            // 부족한 개념 확인 및 퀴즈
             printf("과목을 선택하세요 (1부터 %d까지): ", subjectCount);
             int selectedSubjectIndex;
             scanf_s("%d", &selectedSubjectIndex);
+
             if (selectedSubjectIndex >= 1 && selectedSubjectIndex <= subjectCount) {
-                printConcepts(&subjects[selectedSubjectIndex - 1]);
+                int allCorrect = quizConcepts(&subjects[selectedSubjectIndex - 1]);
+                if (allCorrect) {
+                    printf("일기장을 여시겠습니까? (1: 예, 0: 아니오): ");
+                    int openDiaryChoice;
+                    scanf_s("%d", &openDiaryChoice);
+
+                    if (openDiaryChoice == 1) {
+                        openDiary();
+                    }
+                }
             }
             else {
                 printf("잘못된 선택입니다.\n");
             }
+
             break;
 
         case 5:
