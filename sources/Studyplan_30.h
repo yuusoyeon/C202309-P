@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <stdbool.h>
 
 #define MAX_SUBJECTS 10
 #define MAX_DAYS 30
@@ -43,6 +42,10 @@ void freeMemory(struct Subject* subjects, int subjectCount);
 // 오늘의 D-day 계획 출력 함수
 void printDdayPlan(struct Subject* subjects, int subjectCount, const char* currentDate, const char* examStartDate);
 
-int quizConcepts(struct Subject* subject);
+// 퀴즈 출력 함수 
+int quizConcepts(struct Subject* subject, int subjectIndex);
+
+// 일기장 작성 함수 
+void openDiary();
 
 #endif // STUDYPLAN_30_H

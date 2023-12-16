@@ -70,8 +70,8 @@ void freeMemory(struct Subject* subjects, int subjectCount) {
 
 
 int quizConcepts(struct Subject* subjects, int subjectIndex) {
+    int allCorrect = 1;
     int additionalQuizzes;
-    int allCorrect = 1;  // 모든 정답을 맞췄는지 여부를 나타내는 변수
 
     do {
         printf("%s 과목의 부족했던 개념을 퀴즈로 확인합니다:\n", subjects[subjectIndex].name);
@@ -92,12 +92,12 @@ int quizConcepts(struct Subject* subjects, int subjectIndex) {
             }
             else {
                 printf("틀렸습니다. 정답은: %s\n", subjects[subjectIndex].definitions[i]);
-                allCorrect = 0;  // 하나라도 틀리면 allCorrect를 0으로 설정
+                allCorrect = 0;
             }
         }
 
         // 추가 퀴즈 여부 물어보기
-        printf("추가 퀴즈를 풀 것인가요? (1: 예, 0: 아니오): ");
+        printf("동일한 문제를 다시 풀어보시겠습니까? (1: 예, 0: 아니오): ");
         scanf_s("%d", &additionalQuizzes);
 
     } while (additionalQuizzes == 1);
@@ -118,7 +118,7 @@ void openDiary() {
 
     printf("\n\n=== 비밀번호 확인 중===\n\n");
 
-    if (strcmp(password, "abcd") != 0) {
+    if (strcmp(password, "공구이육") != 0) {
         printf("=== 비밀번호가 틀렸어요. ===\n\n");
         return;
     }
