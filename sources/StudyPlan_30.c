@@ -1,5 +1,50 @@
 #include "Studyplan_30.h"
 
+
+int Initialize(SubjectStack* s, int max) {
+    s->ptr = 0;
+    if ((s->stk = calloc(max, sizeof(int))) == NULL) {
+        s->max = 0;
+        return -1;
+    }
+    s->max = max;
+    return 0;
+}
+
+void Push(SubjectStack* s, int x) {
+    if (s->ptr >= s->max) {
+        // 스택이 가득 찼을 때의 처리
+        printf("Subject stack is full.\n");
+        return;
+    }
+    s->stk[s->ptr++] = x;
+}
+
+int Pop(SubjectStack* s, int* x) {
+    if (s->ptr <= 0) {
+        // 스택이 비었을 때의 처리
+        printf("Subject stack is empty.\n");
+        return -1;
+    }
+    *x = s->stk[--s->ptr];
+    return 0;
+}
+
+int Top(const SubjectStack* s, int* x) {
+    if (s->ptr <= 0) {
+        // 스택이 비었을 때의 처리
+        printf("Subject stack is empty.\n");
+        return -1;
+    }
+    *x = s->stk[s->ptr - 1];
+    return 0;
+}
+
+void Terminate(SubjectStack* s) {
+    free(s->stk);
+    s->max = s->ptr = 0;
+}
+
 void getMonthDay(const char* date, int* month, int* day) {
     sscanf_s(date, "%d월%d일", month, day);
 }
@@ -184,3 +229,32 @@ void printDdayPlan(struct Subject* subjects, int subjectCount, const char* curre
     printf("\n");
 }
 
+void handleTodayTask(SubjectStack* stack, int* subjectIndex, const struct Subject* subjects, int subjectCount) {
+    // 오늘의 할 일 수행 여부 입력 받기
+    printf("오늘 할 일을 수행하셨나요? (1: 예, 0: 아니오): ");
+    int todayTaskCompleted;
+    scanf_s("%d", &todayTaskCompleted);
+
+    if (todayTaskCompleted) {
+        // 오늘의 할 일 수행 완료 시 스택에서 맨 위 숫자(pop)를 가져와 출력
+        int poppedValue;
+        if (Pop(stack, &poppedValue) == 0) {
+            poppedValue += 1;
+            printf("오늘 할 일을 수행하셨습니다. 오늘차 계획을 삭제합니다. (내일 해야할 일 (%d일차): %d)\n", poppedValue, poppedValue);
+        }
+        else {
+            printf("남은 할 일이 없습니다.\n");
+        }
+    }
+    else {
+        // 오늘의 할 일 수행하지 않았을 때 스택은 건드리지 않고 현재 맨 위 숫자(top)만 출력
+        int topValue;
+        if (Top(stack, &topValue) == 0) {
+            printf("오늘 할 일을 수행하지 않으셨습니다. 내일로 미루어집니다. (내일 해야 할 일 (%d일차): %d)\n", topValue, topValue);
+        }
+        else {
+            printf("남은 할 일이 없습니다.\n");
+        }
+    }
+
+}
