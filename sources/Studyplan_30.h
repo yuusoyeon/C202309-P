@@ -21,6 +21,22 @@ struct Subject {
     char(*definitions)[100];   // 포인터로 동적으로 할당할 배열
 };
 
+typedef struct {
+    int max;
+    int ptr;
+    int* stk;
+} SubjectStack;
+
+int Initialize(SubjectStack* s, int max);
+
+void Push(SubjectStack* s, int x);
+
+int Pop(SubjectStack* s, int* x);
+
+int Top(const SubjectStack* s, int* x);
+
+void Terminate(SubjectStack* s);
+
 // 월과 일을 분리하는 함수
 void getMonthDay(const char* date, int* month, int* day);
 
@@ -47,5 +63,8 @@ int quizConcepts(struct Subject* subject, int subjectIndex);
 
 // 일기장 작성 함수 
 void openDiary();
+
+// 할 일 수행 여부 입력 함수
+void handleTodayTask(SubjectStack* stack, int* subjectIndex, const struct Subject* subjects, int subjectCount);
 
 #endif // STUDYPLAN_30_H
