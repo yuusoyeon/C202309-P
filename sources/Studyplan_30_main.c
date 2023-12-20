@@ -2,10 +2,13 @@
 
 
 int main() {
-    int subjectCount, totalDays;
-    int subjectIndex = 0;
     SubjectStack stack;
+
+    int subjectCount, totalDays;
     int allCorrect;
+    int selectedSubjectIndex;
+    int totalQuizzes = 0;
+    int subjectIndex = 0;
 
     Initialize(&stack, 30);
 
@@ -84,52 +87,16 @@ int main() {
         case 2:
             // 오늘의 D-day 계획 확인하기
             printf("오늘의 날짜를 입력하세요 (월일 형식, ex: 12월11일): ");
+            printf("\n");
             scanf_s("%s", currentDate, 20);
 
             int daysElapsed = calcDaysLeft(currentDate, examStartDate);
 
             for (int i = 0; i < subjectCount; ++i) {
                 int daysLeft = calcDaysLeft(examStartDate, subjects[i].examDate);
+
                 printf("%s - %d일 남았습니다.\n", subjects[i].name, daysElapsed + daysLeft);
             }
-
-            printf("\n[오늘의 계획]\n");
-
-            int poppedValue, topValue;
-            int popResult = Pop(&stack, &poppedValue);
-            int topResult = Top(&stack, &topValue);
-
-            int valueToPrint;
-            if (popResult == 0) {
-                // popResult가 0인 경우
-                valueToPrint = poppedValue;
-            }
-            else if (topResult == 0) {
-                // topResult가 0인 경우 (popResult가 0이 아닌 경우)
-                valueToPrint = topValue;
-            }
-            else {
-                // popResult와 topResult가 모두 0이 아닌 경우 (스택이 비었을 경우)
-                printf("    스택이 비었습니다.\n");
-                // 이후에 필요한 처리를 추가하거나 함수를 종료하는 등의 작업을 수행할 수 있습니다.
-                break;
-            }
-
-            // valueToPrint를 이용한 출력
-            printf("    %s ", subjects[valueToPrint].name);
-
-            switch (valueToPrint % 3) {
-            case 0:
-                printf("%d회독\n", (valueToPrint / 3) + 1);
-                break;
-            case 1:
-                printf("문제풀이&오답 체크\n");
-                break;
-            case 2:
-                printf("백지 테스트\n");
-                break;
-            }
-
             printf("\n");
             break;
 
@@ -138,8 +105,7 @@ int main() {
             inputConcepts(subjects, subjectCount);
             break;
         case 4:
-            // 부족한 개념 확인하고 일기 쓰기 
-
+            // 부족한 개념 확인하고 일기 쓰기
             do {
                 // 사용자에게 과목을 선택하도록 물어봄
                 printf("과목을 선택하세요 (1부터 %d까지, 0: 종료): ", subjectCount);
@@ -149,25 +115,23 @@ int main() {
                 if (selectedSubjectIndex == 0) {
                     break;
                 }
-
                 if (selectedSubjectIndex >= 1 && selectedSubjectIndex <= subjectCount) {
                     allCorrect = quizConcepts(subjects, selectedSubjectIndex - 1);
-
-                    if (allCorrect) {
-                        printf("일기장을 여시겠습니까? (1: 예, 0: 아니오): ");
-                        int openDiaryChoice;
-                        scanf_s("%d", &openDiaryChoice);
-
-                        if (openDiaryChoice == 1) {
-                            openDiary();
-                        }
-                    }
                 }
                 else {
                     printf("잘못된 선택입니다.\n");
                 }
 
             } while (1);
+
+            //openDiary 함수 호출
+            printf("일기장을 여시겠습니까? (1: 예, 0: 아니오): ");
+            int openDiaryChoice;
+            scanf_s("%d", &openDiaryChoice);
+
+            if (openDiaryChoice == 1) {
+                openDiary();
+            }
 
             break;
 

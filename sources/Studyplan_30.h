@@ -35,11 +35,6 @@ int Pop(SubjectStack* s, int* x);
 
 int Top(const SubjectStack* s, int* x);
 
-void Terminate(SubjectStack* s);
-
-// 월과 일을 분리하는 함수
-void getMonthDay(const char* date, int* month, int* day);
-
 // 두 날짜 간의 차이를 계산하는 함수
 int calcDaysLeft(const char* currentDate, const char* examDate);
 
@@ -48,9 +43,6 @@ void printMenu();
 
 // 부족한 개념 입력 함수
 void inputConcepts(struct Subject* subjects, int subjectCount);
-
-// 부족한 개념 출력 함수
-void printConcepts(struct Subject* subject);
 
 // 메모리 해제 함수
 void freeMemory(struct Subject* subjects, int subjectCount);
