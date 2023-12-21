@@ -10,8 +10,10 @@ int main() {
     int totalQuizzes = 0;
     int subjectIndex = 0;
 
+    // 스택 초기화 
     Initialize(&stack, 30);
 
+    // 스택에 30부터 1까지 차례대로 값 넣기
     for (int i = 30; i >= 1; --i) {
         Push(&stack, i);
     }
@@ -85,7 +87,7 @@ int main() {
             break;
 
         case 2:
-            // 오늘의 D-day 계획 확인하기
+            // 남은 D-day 확인하기
             printf("오늘의 날짜를 입력하세요 (월일 형식, ex: 12월11일): ");
             printf("\n");
             scanf_s("%s", currentDate, 20);
@@ -136,7 +138,7 @@ int main() {
             break;
 
         case 5:
-            // 오늘 일정을 미루시겠습니까?
+            // 일정 미루기
             handleTodayTask(&stack, &subjectIndex, subjects, subjectCount);
             break;
         case 6:

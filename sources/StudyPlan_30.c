@@ -1,9 +1,14 @@
 #include "Studyplan_30.h"
 
 
+// SubjectStack 초기화
+//   s: 초기화할 SubjectStack 구조체에 대한 포인터
+//   max: 스택의 최대 크기
 int Initialize(SubjectStack* s, int max) {
     s->ptr = 0;
+    // 스택 배열을 위한 메모리를 할당
     if ((s->stk = calloc(max, sizeof(int))) == NULL) {
+        // 메모리 할당 실패 시.
         s->max = 0;
         return -1;
     }
@@ -11,29 +16,30 @@ int Initialize(SubjectStack* s, int max) {
     return 0;
 }
 
+// 스택 데이터 추가 함수
 void Push(SubjectStack* s, int x) {
     if (s->ptr >= s->max) {
-        // 스택이 가득 찼을 때의 처리
-        printf("Subject stack is full.\n");
+        // 스택이 가득 찼을 때
+        printf("스택이 전부 찼습니다.\n");
         return;
     }
     s->stk[s->ptr++] = x;
 }
 
+// 스택 데이터 제거 함수
 int Pop(SubjectStack* s, int* x) {
     if (s->ptr <= 0) {
-        // 스택이 비었을 때의 처리
-        printf("Subject stack is empty.\n");
+        printf("스택이 비었습니다.\n");
         return -1;
     }
     *x = s->stk[--s->ptr];
     return 0;
 }
 
+// 할 일을 미뤘을 때 스택을 그대로 가져오는 함수
 int Top(const SubjectStack* s, int* x) {
     if (s->ptr <= 0) {
-        // 스택이 비었을 때의 처리
-        printf("Subject stack is empty.\n");
+        printf("스택이 비었습니다.\n");
         return -1;
     }
     *x = s->stk[s->ptr - 1];
@@ -41,7 +47,7 @@ int Top(const SubjectStack* s, int* x) {
 }
 
 
-
+// 남은 D-day를 계산하는 기능
 int calcDaysLeft(const char* currentDate, const char* examDate) {
     struct tm currentTime, examTime;
     memset(&currentTime, 0, sizeof(struct tm));
@@ -65,6 +71,7 @@ int calcDaysLeft(const char* currentDate, const char* examDate) {
     return daysLeft;
 }
 
+// 메뉴 함수
 void printMenu() {
     printf("\n[메뉴]\n");
     printf("1. 30일용 계획 세우기\n");
@@ -76,6 +83,7 @@ void printMenu() {
     printf("메뉴를 선택하세요: ");
 }
 
+// 부족한 개념 입력 함수 
 void inputConcepts(struct Subject* subjects, int subjectCount) {
     for (int i = 0; i < subjectCount; ++i) {
         printf("%s 과목의 부족했던 개념을 입력해주세요 (입력을 마치려면 q를 입력하세요):\n", subjects[i].name);
@@ -92,7 +100,7 @@ void inputConcepts(struct Subject* subjects, int subjectCount) {
     }
 }
 
-
+// 메모리 해제 함수
 void freeMemory(struct Subject* subjects, int subjectCount) {
     for (int i = 0; i < subjectCount; ++i) {
         free(subjects[i].concepts);
@@ -100,7 +108,7 @@ void freeMemory(struct Subject* subjects, int subjectCount) {
     }
 }
 
-
+// 퀴즈 출력 함수
 int quizConcepts(struct Subject* subjects, int subjectIndex) {
     int allCorrect = 1;
     int additionalQuizzes;
@@ -189,12 +197,7 @@ void openDiary() {
     }
 }
 
-
-
-void printDdayPlan(struct Subject* subjects, int subjectCount, const char* currentDate, const char* examStartDate) {
-    int daysElapsed = calcDaysLeft(currentDate, examStartDate);
-}
-
+//할 일 수행 여부 확인 함수
 void handleTodayTask(SubjectStack* stack, int* subjectIndex, const struct Subject* subjects, int subjectCount) {
     // 오늘의 할 일 수행 여부 입력 받기
     printf("오늘 할 일을 수행하셨나요? (1: 예, 0: 아니오): ");

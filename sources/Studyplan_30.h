@@ -1,6 +1,5 @@
 // Studyplan_30.h
 
-#ifndef STUDYPLAN_30_H
 #define STUDYPLAN_30_H
 
 #include <stdio.h>
@@ -21,18 +20,23 @@ struct Subject {
     char(*definitions)[100];   // 포인터로 동적으로 할당할 배열
 };
 
+// 스택 구현 구조체 
 typedef struct {
-    int max;
-    int ptr;
-    int* stk;
+    int max;              // max: 스택의 최대 크기를 나타내는 정수
+    int ptr;              // ptr: 스택의 현재 위치를 가리키는 정수
+    int* stk;             // stk : 스택에 실제로 저장되는 정수 값들을 가리키는 포인터
 } SubjectStack;
 
+// 스택 초기화 함수
 int Initialize(SubjectStack* s, int max);
 
+// 스택 데이터 추가 함수
 void Push(SubjectStack* s, int x);
 
+// 스택 데이터 제거 함수
 int Pop(SubjectStack* s, int* x);
 
+// 스택 유지 함수
 int Top(const SubjectStack* s, int* x);
 
 // 두 날짜 간의 차이를 계산하는 함수
@@ -47,9 +51,6 @@ void inputConcepts(struct Subject* subjects, int subjectCount);
 // 메모리 해제 함수
 void freeMemory(struct Subject* subjects, int subjectCount);
 
-// 오늘의 D-day 계획 출력 함수
-void printDdayPlan(struct Subject* subjects, int subjectCount, const char* currentDate, const char* examStartDate);
-
 // 퀴즈 출력 함수 
 int quizConcepts(struct Subject* subject, int subjectIndex);
 
@@ -59,4 +60,3 @@ void openDiary();
 // 할 일 수행 여부 입력 함수
 void handleTodayTask(SubjectStack* stack, int* subjectIndex, const struct Subject* subjects, int subjectCount);
 
-#endif // STUDYPLAN_30_H
